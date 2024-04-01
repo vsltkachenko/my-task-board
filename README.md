@@ -2,7 +2,7 @@
 
 
   
-## Метод установки и запуска
+## Installation and launch method
 
 Copy the repository
 
