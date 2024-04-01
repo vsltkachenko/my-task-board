@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply text-sm;
+    }
+}
+@layer components {
+    .btn {
+        @apply flex items-center  justify-between gap-1.5 rounded-md px-3 py-1.5 font-medium text-slate-900 transition;
+    }
+    .container {
+        @apply max-w-[1100px];
+    }
+    .grid-container {
+        @apply grid gap-5;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+}
+@layer utilities {
+    .btn-green {
+        @apply bg-green-400 hover:bg-green-500;
+    }
+    .btn-yellow {
+        @apply bg-white hover:bg-yellow-100;
+    }
+    .btn-slate {
+        @apply bg-slate-300 hover:bg-slate-400;
+    }
+    .btn-white {
+        @apply bg-slate-100 hover:bg-slate-200;
+    }
+    body.lock {
+        overflow: hidden;
+        touch-action: none;
+        overscroll-behavior: none;
+    }
+}
