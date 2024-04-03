@@ -55,7 +55,6 @@ const Task: FC<Props> = ({
         await triggerGetAllCategories()
         await triggerGetAllHistory()
     }
-
     
 
     const taskActions = async (action: string | number) => {
@@ -70,20 +69,9 @@ const Task: FC<Props> = ({
                 dispatch(setCurrentTaskId(id))
                 dispatch(setModalType('TaskDetailsEdit'))
                 setOpen(false)
-                dispatch(modalOpen())
-
-                // TaskDetailsEdit
-                //  setEditMode(true)
+                dispatch(modalOpen())                
                 break
-
-            case 'edit-submit':
-                // const value: string = inputRef.current?.value || ''
-                //  console.log(value)
-                //  setEditMode(false)
-                //  await updateCategory({ id: `${id}`, title: value })
-                //  await triggerGetAllCategories()
-                break
-
+            
             case 'delete':
                 console.log('delete task')
                 await deleteTask(`${id}`).unwrap()

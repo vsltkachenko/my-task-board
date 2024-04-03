@@ -92,8 +92,7 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
                 categoryName: currentCategoryName as string
             })
            
-        } else {
-                   
+        } else {                   
             await updateTask({
                 id: `${currentTask?.id}`,
                 title,
@@ -104,7 +103,8 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
             })
           
         }
-        dispatch(modalClose())
+        dispatch(modalClose());
+        dispatch(setModalType(''))
         resetState()
         await triggerGetAllCategories()
         await triggerGetAllHistory()
