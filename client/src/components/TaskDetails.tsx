@@ -11,7 +11,7 @@ import {
 } from '../store/services/taskApi'
 import { TaskType } from '../store/types'
 import { useLazyGetAllCategoriesQuery } from '../store/services/categoryApi'
-import { modalClose } from '../store/appReducer'
+import { modalClose, modalOpen, setModalType } from '../store/appReducer'
 import { useLazyGetAllHistoryQuery } from '../store/services/historyApi'
 import formatDate from '../utils/formatDate'
 
@@ -73,12 +73,16 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
         return existThisTask || acc
     }, null)
 
+    const editTaskMode = () => {
+          dispatch(setModalType('TaskDetailsEdit'));              
+        dispatch(modalOpen())  
+    }
+
     const handleSubmit = async (e: any) => {
         e.preventDefault()
         const { title, priority, duedate, description } = editData
 
-        if (newTask) {
-            dispatch(modalClose())
+        if (newTask) {           
             await createTask({
                 title,
                 priority,
@@ -87,9 +91,9 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
                 category: currentCategoryId ?? 0,
                 categoryName: currentCategoryName as string
             })
-            resetState()
+           
         } else {
-            dispatch(modalClose())
+                   
             await updateTask({
                 id: `${currentTask?.id}`,
                 title,
@@ -98,15 +102,15 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
                 description,
                 category: +thisTaskCategory?.id
             })
-            await resetState()
+          
         }
-
+        dispatch(modalClose())
+        resetState()
         await triggerGetAllCategories()
         await triggerGetAllHistory()
     }
 
-    useEffect(() => {
-        resetState()
+    useEffect(() => {      
         if (modalType === 'TaskDetailsEdit' && currentTask?.id) {
             setEditData({
                 status: thisTaskCategory.title,
@@ -115,6 +119,9 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
                 duedate: currentTask.duedate,
                 description: currentTask.description
             })
+        } else if (modalType === 'NewTask') {
+            resetState()
+
         }
     }, [modalType, currentTask?.id])
 
@@ -158,7 +165,7 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
                             <h2 className="font-semibold">
                                 {currentTask?.title}
                             </h2>
-                            <button className="btn btn-white text-sm">
+                            <button type='button' onClick={editTaskMode} className="btn btn-white text-sm">
                                 <FaRegEdit size={18} />
                                 <span className="mt-[4px]">Edit task</span>
                             </button>
