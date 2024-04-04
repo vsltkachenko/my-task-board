@@ -1,21 +1,22 @@
-import { HiOutlineDotsVertical } from 'react-icons/hi'
-import { CiCalendar } from 'react-icons/ci'
 import { BsDot } from 'react-icons/bs'
+import { CiCalendar } from 'react-icons/ci'
+import { HiOutlineDotsVertical } from 'react-icons/hi'
 
-import { useAppDispatch, useAppSelector } from '../store/hooks'
-import { modalOpen, setCurrentTaskId, setModalType } from '../store/appReducer'
 import { FC, useState } from 'react'
-import Select from './Select'
+import { FaRegEdit } from 'react-icons/fa'
+import { RiDeleteBin6Line } from 'react-icons/ri'
+import { modalOpen, setCurrentTaskId, setModalType } from '../store/appReducer'
+import { useAppDispatch, useAppSelector } from '../store/hooks'
+import { useLazyGetAllCategoriesQuery } from '../store/services/categoryApi'
+import { useLazyGetAllHistoryQuery } from '../store/services/historyApi'
 import {
     useDeleteTaskMutation,
     useMoveTaskMutation
 } from '../store/services/taskApi'
-import { useLazyGetAllCategoriesQuery } from '../store/services/categoryApi'
-import { FaRegEdit } from 'react-icons/fa'
-import { RiDeleteBin6Line } from 'react-icons/ri'
-import CardSelect from './CardSelect'
+import formatDueDate from '../utils/formatDueDate'
 import getSelectOptions from '../utils/getSelectOptions'
-import { useLazyGetAllHistoryQuery } from '../store/services/historyApi'
+import CardSelect from './CardSelect'
+import Select from './Select'
 
 const taskMenu = [
     { name: 'Edit', action: 'edit-mode', pict: <FaRegEdit size={18} /> },
@@ -55,7 +56,6 @@ const Task: FC<Props> = ({
         await triggerGetAllCategories()
         await triggerGetAllHistory()
     }
-    
 
     const taskActions = async (action: string | number) => {
         switch (action) {
@@ -69,9 +69,9 @@ const Task: FC<Props> = ({
                 dispatch(setCurrentTaskId(id))
                 dispatch(setModalType('TaskDetailsEdit'))
                 setOpen(false)
-                dispatch(modalOpen())                
+                dispatch(modalOpen())
                 break
-            
+
             case 'delete':
                 console.log('delete task')
                 await deleteTask(`${id}`).unwrap()
@@ -104,7 +104,9 @@ const Task: FC<Props> = ({
             <p className="leading-6">{description}</p>
             <div className="flex items-end gap-x-2 font-semibold text-slate-600">
                 <CiCalendar size={24} />
-                <span>{duedate}</span>
+                <span>
+                    {formatDueDate(duedate) || 'Without execution date...'}
+                </span>
             </div>
             <div className="p-0.75 flex items-center rounded-2xl border bg-slate-100 text-slate-600">
                 <BsDot size={24} />

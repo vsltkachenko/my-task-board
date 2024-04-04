@@ -15,16 +15,16 @@ const AsideCard: FC<HistoryType> = ({
     taskId,
     createdAt
 }) => {
-    console.log(
-        id,
-        actionId,
-        oldCategoryName,
-        newCategoryName,
-        oldTaskName,
-        newTaskName,
-        taskId,
-        createdAt
-    )
+    // console.log(
+    //     id,
+    //     actionId,
+    //     oldCategoryName,
+    //     newCategoryName,
+    //     oldTaskName,
+    //     newTaskName,
+    //     taskId,
+    //     createdAt
+    // )
 
     return (
         <div className="px-5 text-slate-600">

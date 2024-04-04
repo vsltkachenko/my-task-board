@@ -1,19 +1,20 @@
-import { VscSymbolEvent } from 'react-icons/vsc'
-import { FaRegEdit } from 'react-icons/fa'
-import { CiCalendar } from 'react-icons/ci'
+import { FC, FormEvent, useEffect, useRef, useState } from 'react'
 import { BsDot } from 'react-icons/bs'
+import { CiCalendar } from 'react-icons/ci'
+import { FaRegEdit } from 'react-icons/fa'
+import { VscSymbolEvent } from 'react-icons/vsc'
+import { modalClose, modalOpen, setModalType } from '../store/appReducer'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
-// import { TaskType } from '../store/types'
-import { FC, useEffect, useState } from 'react'
+import { useLazyGetAllCategoriesQuery } from '../store/services/categoryApi'
+import { useLazyGetAllHistoryQuery } from '../store/services/historyApi'
 import {
     useCreateTaskMutation,
     useUpdateTaskMutation
 } from '../store/services/taskApi'
 import { TaskType } from '../store/types'
-import { useLazyGetAllCategoriesQuery } from '../store/services/categoryApi'
-import { modalClose, modalOpen, setModalType } from '../store/appReducer'
-import { useLazyGetAllHistoryQuery } from '../store/services/historyApi'
 import formatDate from '../utils/formatDate'
+import formatDueDate from '../utils/formatDueDate'
+import AirDatepickerReact from './Datepicker/Datepicker-react'
 
 type Props = {
     editMode?: boolean | undefined
@@ -21,6 +22,7 @@ type Props = {
 }
 
 const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
+    const dispatch = useAppDispatch()
     const {
         currentTaskId,
         allCategory,
@@ -28,7 +30,6 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
         currentCategoryName,
         modalType
     } = useAppSelector((state) => state.app)
-    const dispatch = useAppDispatch()
 
     const [createTask] = useCreateTaskMutation()
     const [updateTask] = useUpdateTaskMutation()
@@ -38,28 +39,26 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
     const [editData, setEditData] = useState<{
         title: string
         priority: 'Medium' | 'Low' | 'High'
-        duedate: string
         description: string
         status: string
     }>({
         title: '',
         priority: 'Medium',
-        duedate: '',
         description: '',
         status: ''
     })
 
     const resetState = () => {
+        dateRef.current = ''
         setEditData({
             title: '',
             priority: 'Medium',
-            duedate: '',
             description: '',
             status: ''
         })
     }
 
-    const thisTaskCategory = allCategory.filter((category) => {
+    const taskCategory = allCategory.filter((category) => {
         const existThisTask = category.tasks.find(
             (task) => task.id === currentTaskId
         )
@@ -73,55 +72,54 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
         return existThisTask || acc
     }, null)
 
+    const dateRef = useRef(currentTask ? currentTask?.duedate : '')
+
     const editTaskMode = () => {
-          dispatch(setModalType('TaskDetailsEdit'));              
-        dispatch(modalOpen())  
+        dispatch(setModalType('TaskDetailsEdit'))
+        dispatch(modalOpen())
     }
 
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const { title, priority, duedate, description } = editData
+        const { title, priority, description } = editData
 
-        if (newTask) {           
+        if (newTask) {
             await createTask({
                 title,
                 priority,
-                duedate,
+                duedate: dateRef.current || '',
                 description,
                 category: currentCategoryId ?? 0,
                 categoryName: currentCategoryName as string
             })
-           
-        } else {                   
+        } else {
             await updateTask({
                 id: `${currentTask?.id}`,
                 title,
                 priority,
-                duedate,
+                duedate: dateRef.current || '',
                 description,
-                category: +thisTaskCategory?.id
+                category: +taskCategory?.id
             })
-          
         }
-        dispatch(modalClose());
+        dispatch(modalClose())
         dispatch(setModalType(''))
         resetState()
         await triggerGetAllCategories()
         await triggerGetAllHistory()
     }
 
-    useEffect(() => {      
+    useEffect(() => {
         if (modalType === 'TaskDetailsEdit' && currentTask?.id) {
             setEditData({
-                status: thisTaskCategory.title,
+                status: taskCategory.title,
                 title: currentTask.title,
                 priority: currentTask.priority,
-                duedate: currentTask.duedate,
                 description: currentTask.description
             })
+            dateRef.current = currentTask ? currentTask?.duedate : ''
         } else if (modalType === 'NewTask') {
             resetState()
-
         }
     }, [modalType, currentTask?.id])
 
@@ -165,7 +163,11 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
                             <h2 className="font-semibold">
                                 {currentTask?.title}
                             </h2>
-                            <button type='button' onClick={editTaskMode} className="btn btn-white text-sm">
+                            <button
+                                type="button"
+                                onClick={editTaskMode}
+                                className="btn btn-white text-sm"
+                            >
                                 <FaRegEdit size={18} />
                                 <span className="mt-[4px]">Edit task</span>
                             </button>
@@ -174,43 +176,42 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
                 </div>
                 <div className="flex flex-col gap-y-4">
                     <div className="flex items-center  gap-4 text-sm ">
-                        <div className="flex shrink-0 gap-x-2 text-slate-600  sm:min-w-28">
+                        <div className="flex min-w-24 shrink-0 gap-x-2  text-slate-600">
                             <VscSymbolEvent size={18} />
                             <span>Status</span>
                         </div>
                         <span className="flex basis-1/2 text-base font-semibold">
                             {newTask
                                 ? currentCategoryName
-                                : thisTaskCategory?.title}
+                                : taskCategory?.title}
                         </span>
                     </div>
-                    <div className="flex items-center gap-4 text-sm ">
-                        <div className="flex shrink-0 gap-x-2  text-slate-600  sm:min-w-28">
+                    <div className="flex flex-wrap items-center gap-4 text-sm ">
+                        <div className="flex min-w-24 shrink-0  gap-x-2  text-slate-600">
                             <CiCalendar size={18} />
                             <span className="">Due Data</span>
                         </div>
 
                         {editMode ? (
-                            <input
-                                // ref={myRef}
-                                value={editData.duedate}
-                                onChange={(e) =>
-                                    setEditData((prev) => ({
-                                        ...prev,
-                                        duedate: e.target.value
-                                    }))
-                                }
-                                className="w-full bg-transparent text-base"
-                                type="text"
+                            <AirDatepickerReact
+                                range={false}
+                                selectedDates={[dateRef.current]}
+                                classes="bg-white"
+                                autoClose={true}
+                                onSelect={(date) => {
+                                    dateRef.current = date.formattedDate
+                                    console.log('Select', dateRef.current)
+                                }}
                             />
                         ) : (
                             <span className="flex basis-1/2 font-semibold">
-                                {currentTask?.duedate}
+                                {formatDueDate(currentTask?.duedate) ||
+                                    'Without execution date...'}
                             </span>
                         )}
                     </div>
                     <div className="flex items-center gap-4 text-sm ">
-                        <div className="flex shrink-0 gap-x-2  text-slate-600  sm:min-w-28">
+                        <div className="flex min-w-24 shrink-0  gap-x-2  text-slate-600">
                             <VscSymbolEvent size={18} />
                             <span className="">Priority</span>
                         </div>
@@ -227,7 +228,7 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
                                             | 'High'
                                     }))
                                 }
-                                className="w-full bg-transparent text-base"
+                                className="w-full"
                                 type="text"
                             />
                         ) : (
@@ -241,10 +242,8 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
                     <h3 className="mb-2 text-base font-semibold">
                         Description
                     </h3>
-
                     {editMode ? (
                         <textarea
-                            // ref={myRef}
                             value={editData.description}
                             onChange={(e) =>
                                 setEditData((prev) => ({
