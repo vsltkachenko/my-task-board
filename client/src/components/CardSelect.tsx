@@ -41,7 +41,7 @@ const CardSelect: FC<Props> = ({
             </button>
             <Select
                 isOpen={isOpen}
-                cls={` z-[1] mt-[-6px] pt-4 overflow-hidden rounded-md border-[1px] border-solid border-slate-400  bg-white py-2 font-medium text-slate-600 border-b-1 border-t-0 z-[1] + ${variant === 'select' ? 'absolute w-full ' : ''}`}
+                cls="absolute w-full z-[1] mt-[-6px] pt-4 overflow-hidden rounded-md border-[1px] border-solid border-slate-300  bg-white py-2 font-medium text-slate-600 border-b-1 border-t-0 z-[1]"
                 menuItems={selectOptions}
                 actions={cardActions}
             />

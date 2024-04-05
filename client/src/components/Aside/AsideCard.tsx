@@ -1,6 +1,6 @@
-import { FaRegCircleDot } from 'react-icons/fa6'
-import { BsDot } from 'react-icons/bs'
 import { FC } from 'react'
+import { BsDot } from 'react-icons/bs'
+import { FaRegCircleDot } from 'react-icons/fa6'
 import { HistoryType } from '../../store/types'
 
 import formatDate from '../../utils/formatDate.ts'
@@ -28,7 +28,7 @@ const AsideCard: FC<HistoryType> = ({
 
     return (
         <div className="px-5 text-slate-600">
-            <div className="py-2">
+            <div className="border-b py-2">
                 <BsDot size={24} className="inline" />
 
                 {/* ========================================================== */}

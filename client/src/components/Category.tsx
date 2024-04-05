@@ -1,22 +1,22 @@
 import { FC, useRef, useState } from 'react'
-import { HiOutlineDotsVertical } from 'react-icons/hi'
-import Select from './Select'
-import {
-    useDeleteCategoryMutation,
-    useLazyGetAllCategoriesQuery,
-    useUpdateCategoryMutation
-} from '../store/services/categoryApi'
-import { IoAdd } from 'react-icons/io5'
 import { FaRegEdit } from 'react-icons/fa'
+import { HiOutlineDotsVertical } from 'react-icons/hi'
+import { IoAdd } from 'react-icons/io5'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-import { useAppDispatch } from '../store/hooks'
 import {
     modalOpen,
     setCurrentCategoryId,
     setCurrentCategoryName,
     setModalType
 } from '../store/appReducer'
+import { useAppDispatch } from '../store/hooks'
+import {
+    useDeleteCategoryMutation,
+    useLazyGetAllCategoriesQuery,
+    useUpdateCategoryMutation
+} from '../store/services/categoryApi'
 import { useLazyGetAllHistoryQuery } from '../store/services/historyApi'
+import Select from './Select'
 
 const categoryMenu = [
     { name: 'Edit', option: 'edit-mode', pict: <FaRegEdit size={18} /> },
@@ -50,7 +50,7 @@ const Category: FC<Props> = ({ count, title, id }) => {
                 setEditMode(true)
                 break
 
-            case 'edit-submit':               
+            case 'edit-submit':
                 setEditMode(false)
                 await updateCategory({ id: `${id}`, title: value })
                 await triggerGetAllCategories()
@@ -65,7 +65,7 @@ const Category: FC<Props> = ({ count, title, id }) => {
                 dispatch(modalOpen())
                 break
 
-            case 'delete':               
+            case 'delete':
                 await deleteCategory(`${id}`).unwrap()
                 await triggerGetAllCategories()
                 await triggerGetAllHistory()
@@ -96,6 +96,7 @@ const Category: FC<Props> = ({ count, title, id }) => {
                                     onChange={(e) => setValue(e.target.value)}
                                     className="w-full bg-transparent text-base"
                                     type="text"
+                                    required
                                 />
                                 <button
                                     type="submit"
