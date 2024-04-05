@@ -248,7 +248,7 @@ const AsideCard: FC<HistoryType> = ({
 
                 {actionId === 10 && (
                     <>
-                        <span>You changed the description </span>
+                        <span>You have changed the description of task </span>
                         <FaRegCircleDot
                             size={16}
                             className="inline-block px-[2px] pb-[3px]"
@@ -256,15 +256,6 @@ const AsideCard: FC<HistoryType> = ({
                         <span className="px-[1px] font-semibold">
                             {oldTaskName}
                         </span>
-                        <span> from </span>
-                        <span className="font-medium leading-6">
-                            {oldDescription}
-                        </span>
-                        <span> to </span>
-                        <span className="font-medium leading-6">
-                            {newDescription}
-                        </span>
-
                         <div className="mt-1 italic">
                             {formatDate(createdAt)}
                         </div>
