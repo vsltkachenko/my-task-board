@@ -234,7 +234,9 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
                                             | 'High'
                                     }))
                                 }}
-                                selectOptions={priorityMenu.filter(item=> item.option !== editData.priority)}
+                                selectOptions={priorityMenu.filter(
+                                    (item) => item.option !== editData.priority
+                                )}
                                 cls={'max-w-36'}
                                 selected={editData.priority}
                                 variant="select"
