@@ -164,7 +164,7 @@ const AsideCard: FC<HistoryType> = ({
                             className="inline-block px-[2px] pb-[3px]"
                         />
                         <span className="font-semibold leading-6">
-                            {' in the development...' + ')'}
+                            {oldCategoryName}
                         </span>
                         <div className="mt-1 italic">
                             {formatDate(createdAt)}

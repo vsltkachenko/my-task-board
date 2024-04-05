@@ -3,13 +3,13 @@ import {
   Injectable,
   NotFoundException
 } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Category } from 'src/category/entities/category.entity'
+import { History } from 'src/history/entities/history.entity'
+import { Repository } from 'typeorm'
 import { CreateTaskDto } from './dto/create-task.dto'
 import { UpdateTaskDto } from './dto/update-task.dto'
 import { Task } from './entities/task.entity'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
-import { History } from 'src/history/entities/history.entity'
-import { Category } from 'src/category/entities/category.entity'
 
 @Injectable()
 export class TaskService {
@@ -108,13 +108,16 @@ export class TaskService {
 
   async remove(id: number) {
     const task = await this.taskRepository.findOne({
-      where: { id }
+      where: { id },
+      relations: {
+        category: true
+      }
     })
     if (!task) throw new NotFoundException('Task not found to delete!')
 
     const newLog = {
       actionId: 6,
-      oldCategoryName: '',
+      oldCategoryName: task.category.title,
       newCategoryName: '',
       newTaskName: '',
       oldTaskName: task.title,
