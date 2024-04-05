@@ -19,9 +19,9 @@ import {
 import { useLazyGetAllHistoryQuery } from '../store/services/historyApi'
 
 const categoryMenu = [
-    { name: 'Edit', action: 'edit-mode', pict: <FaRegEdit size={18} /> },
-    { name: 'Add new card', action: 'add-new-card', pict: <IoAdd size={22} /> },
-    { name: 'Delete', action: 'delete', pict: <RiDeleteBin6Line size={19} /> }
+    { name: 'Edit', option: 'edit-mode', pict: <FaRegEdit size={18} /> },
+    { name: 'Add new card', option: 'add-new-card', pict: <IoAdd size={22} /> },
+    { name: 'Delete', option: 'delete', pict: <RiDeleteBin6Line size={19} /> }
 ]
 
 type Props = {
@@ -43,15 +43,14 @@ const Category: FC<Props> = ({ count, title, id }) => {
     const [triggerGetAllHistory] = useLazyGetAllHistoryQuery()
     const [updateCategory] = useUpdateCategoryMutation()
 
-    const categoryActions = async (action: string) => {
-        switch (action) {
+    const categoryActions = async (option: string) => {
+        switch (option) {
             case 'edit-mode':
                 setOpen(false)
                 setEditMode(true)
                 break
 
-            case 'edit-submit':
-                console.log(value)
+            case 'edit-submit':               
                 setEditMode(false)
                 await updateCategory({ id: `${id}`, title: value })
                 await triggerGetAllCategories()
@@ -66,15 +65,14 @@ const Category: FC<Props> = ({ count, title, id }) => {
                 dispatch(modalOpen())
                 break
 
-            case 'delete':
-                console.log('delete category')
+            case 'delete':               
                 await deleteCategory(`${id}`).unwrap()
                 await triggerGetAllCategories()
                 await triggerGetAllHistory()
                 break
 
             default:
-                console.log('Bad action')
+                console.log('Bad option')
                 break
         }
     }

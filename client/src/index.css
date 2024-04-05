@@ -9,7 +9,7 @@
 }
 @layer components {
     .btn {
-        @apply flex items-center  justify-between gap-1.5 rounded-md px-3 py-1.5 font-medium text-slate-900 transition;
+        @apply flex min-h-8 items-center justify-between gap-1.5 rounded-md px-3 py-1.5 font-medium text-slate-900 transition;
     }
     .container {
         @apply max-w-[1100px];

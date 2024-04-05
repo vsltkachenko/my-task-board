@@ -32,6 +32,6 @@ export type HistoryType = {
 
 export type SelectOptionsType = {
     name: string
-    action: string
-    pict: React.ReactNode
+    option: string
+    pict?: React.ReactNode
 }

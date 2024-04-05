@@ -1,25 +1,38 @@
 import { FC, useState } from 'react'
-import { VscChevronUp } from 'react-icons/vsc'
-import { VscChevronDown } from 'react-icons/vsc'
-import Select from './Select'
+import { VscChevronDown, VscChevronUp } from 'react-icons/vsc'
 import { SelectOptionsType } from '../store/types'
+import Select from './Select'
 
 type Props = {
-    actions: (value: string) => void
+    actions: (option: string) => void
     selectOptions: SelectOptionsType[]
     cls?: string
+    selected?: 'Medium' | 'Low' | 'High'
+    variant?: 'select' | 'pop-up'
 }
 
-const CardSelect: FC<Props> = ({ actions, selectOptions }) => {
+const CardSelect: FC<Props> = ({
+    selectOptions,
+    actions,
+    selected,
+    cls,
+    variant
+}) => {
     const [isOpen, setOpen] = useState(false)
 
+    const cardActions = (action: string) => {
+        setOpen(false)
+        actions(action)
+    }
+
     return (
-        <div className="relative w-full">
+        <div className={`${cls} relative w-full`}>
             <button
+                type="button"
                 onClick={() => setOpen(!isOpen)}
-                className="z-1 btn btn-slate relative w-full p-2 text-xs font-semibold"
+                className="btn btn-slate relative z-[2] w-full p-2 text-xs font-semibold"
             >
-                Move to:
+                {variant === 'select' ? selected : 'Move to:'}
                 {isOpen ? (
                     <VscChevronUp size={20} />
                 ) : (
@@ -28,11 +41,9 @@ const CardSelect: FC<Props> = ({ actions, selectOptions }) => {
             </button>
             <Select
                 isOpen={isOpen}
-                cls={
-                    'mt-[-6px] z-2 pt-4 overflow-hidden rounded-md border-[1px] border-solid border-slate-400  bg-white py-2 font-medium text-slate-600 border-b-1 border-t-0'
-                }
+                cls={` z-[1] mt-[-6px] pt-4 overflow-hidden rounded-md border-[1px] border-solid border-slate-400  bg-white py-2 font-medium text-slate-600 border-b-1 border-t-0 z-[1] + ${variant === 'select' ? 'absolute w-full ' : ''}`}
                 menuItems={selectOptions}
-                actions={actions}
+                actions={cardActions}
             />
         </div>
     )

@@ -14,12 +14,19 @@ import {
 import { TaskType } from '../store/types'
 import formatDate from '../utils/formatDate'
 import formatDueDate from '../utils/formatDueDate'
+import CardSelect from './CardSelect'
 import AirDatepickerReact from './Datepicker/Datepicker-react'
 
 type Props = {
     editMode?: boolean | undefined
     newTask?: boolean | undefined
 }
+
+const priorityMenu = [
+    { name: 'Low', option: 'Low' },
+    { name: 'Medium', option: 'Medium' },
+    { name: 'High', option: 'High' }
+]
 
 const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
     const dispatch = useAppDispatch()
@@ -135,9 +142,9 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
             <div
                 className={`z-1 relative flex ${newTask ? 'w-full' : 'basis-3/5'}  flex-col gap-6 px-6 pb-6 pt-16 sm:pt-16`}
             >
-                <div className="flex items-center justify-between text-xl">
+                <div className="flex flex-wrap items-center justify-between gap-y-3 text-xl">
                     {editMode ? (
-                        <div className="flex w-full justify-between gap-x-3">
+                        <div className="flex w-full flex-col items-start justify-between gap-3 sm:flex-row sm:items-stretch">
                             <input
                                 value={editData.title}
                                 onChange={(e) =>
@@ -217,19 +224,20 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
                         </div>
 
                         {editMode ? (
-                            <input
-                                value={editData.priority}
-                                onChange={(e) =>
+                            <CardSelect
+                                actions={(value) => {
                                     setEditData((prev) => ({
                                         ...prev,
-                                        priority: e.target.value as
+                                        priority: value as
                                             | 'Medium'
                                             | 'Low'
                                             | 'High'
                                     }))
-                                }
-                                className="w-full"
-                                type="text"
+                                }}
+                                selectOptions={priorityMenu.filter(item=> item.option !== editData.priority)}
+                                cls={'max-w-36'}
+                                selected={editData.priority}
+                                variant="select"
                             />
                         ) : (
                             <span className="flex basis-1/2 font-semibold">

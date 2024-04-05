@@ -2,20 +2,22 @@ import { FC } from 'react'
 import { SelectOptionsType } from '../store/types'
 
 type Props = {
-    isOpen: boolean
-    actions: (value: string) => void
+    isOpen: boolean   
+    actions: (option: string) => void
     menuItems: SelectOptionsType[]
     cls?: string
 }
 
-const Select: FC<Props> = ({ isOpen, menuItems, cls, actions }) => {
+const Select: FC<Props> = ({ isOpen,  menuItems, cls, actions }) => {
     return (
         <div className={`${cls} ${isOpen ? 'block' : 'hidden'}`}>
             <ul className="flex flex-col gap-y-1">
                 {menuItems.map((el, index) => (
                     <li
-                        onClick={() => actions(el.action)}
-                        className="flex cursor-pointer bg-slate-100 items-center gap-x-2 px-3 py-1 hover:bg-slate-200 transition-all"
+                        onClick={() => {                          
+                            actions(el.option)
+                        }}
+                        className="flex cursor-pointer items-center gap-x-2 bg-slate-100 px-3 py-1 transition-all hover:bg-slate-200"
                         key={index}
                     >
                         {el.pict}

@@ -19,8 +19,8 @@ import CardSelect from './CardSelect'
 import Select from './Select'
 
 const taskMenu = [
-    { name: 'Edit', action: 'edit-mode', pict: <FaRegEdit size={18} /> },
-    { name: 'Delete', action: 'delete', pict: <RiDeleteBin6Line size={19} /> }
+    { name: 'Edit', option: 'edit-mode', pict: <FaRegEdit size={18} /> },
+    { name: 'Delete', option: 'delete', pict: <RiDeleteBin6Line size={19} /> }
 ]
 
 type Props = {
@@ -112,12 +112,6 @@ const Task: FC<Props> = ({
                 <BsDot size={24} />
                 <span className="ml-[-4px] pr-2.5">{priority}</span>
             </div>
-
-            <CardSelect
-                actions={moveTaskAction}
-                selectOptions={getSelectOptions(allCategory, id)}
-            />
-
             <Select
                 isOpen={isOpen}
                 menuItems={taskMenu}
@@ -125,6 +119,10 @@ const Task: FC<Props> = ({
                 cls={
                     'absolute right-[-10px] top-11 z-10 overflow-hidden rounded-md border-[1px] border-solid border-slate-300  bg-white py-2 font-medium text-slate-600'
                 }
+            />
+            <CardSelect
+                actions={moveTaskAction}
+                selectOptions={getSelectOptions(allCategory, id)}
             />
         </div>
     )
