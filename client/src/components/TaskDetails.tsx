@@ -63,14 +63,7 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
             description: '',
             status: ''
         })
-    }
-
-    const taskCategory = allCategory.filter((category) => {
-        const existThisTask = category.tasks.find(
-            (task) => task.id === currentTaskId
-        )
-        return !!existThisTask
-    })[0]
+    }  
 
     const currentTask = allCategory.reduce<TaskType | null>((acc, category) => {
         const existThisTask = category.tasks.find(
@@ -96,17 +89,18 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
                 priority,
                 duedate: dateRef.current || '',
                 description,
-                category: currentCategoryId ?? 0,
-                categoryName: currentCategoryName as string
+                category: currentCategoryId as number,
+                currentCategoryName: currentCategoryName as string
             })
         } else {
             await updateTask({
-                id: `${currentTask?.id}`,
+                id: `${currentTaskId}` as string,
                 title,
                 priority,
                 duedate: dateRef.current || '',
                 description,
-                category: +taskCategory?.id
+                category: currentCategoryId as number,
+                currentCategoryName: currentCategoryName as string
             })
         }
         dispatch(modalClose())
@@ -119,7 +113,7 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
     useEffect(() => {
         if (modalType === 'TaskDetailsEdit' && currentTask?.id) {
             setEditData({
-                status: taskCategory.title,
+                status: currentCategoryName as string,
                 title: currentTask.title,
                 priority: currentTask.priority,
                 description: currentTask.description
@@ -188,15 +182,13 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
                             <span>Status</span>
                         </div>
                         <span className="flex basis-1/2 text-base font-semibold">
-                            {newTask
-                                ? currentCategoryName
-                                : taskCategory?.title}
+                            {currentCategoryName}
                         </span>
                     </div>
                     <div className="flex flex-wrap items-center gap-4 text-sm ">
                         <div className="flex min-w-24 shrink-0  gap-x-2  text-slate-600">
                             <CiCalendar size={18} />
-                            <span className="">Due Data</span>
+                            <span className="">Due date</span>
                         </div>
 
                         {editMode ? (

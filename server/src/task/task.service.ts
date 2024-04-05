@@ -33,11 +33,9 @@ export class TaskService {
 
     const newLog = {
       actionId: 2,
-      oldCategoryName: createTaskDto.categoryName,
-      newCategoryName: '',
-      oldTaskName: '',
+      oldCategoryName: createTaskDto.currentCategoryName,
+      newCategoryName: createTaskDto.currentCategoryName,
       newTaskName: createTaskDto.title,
-      categoryId: +createTaskDto.category,
       taskId: 0
     }
 
@@ -79,9 +77,13 @@ export class TaskService {
     })
     if (!task) throw new NotFoundException('Task not found to update!')
 
-    if (updateTaskDto.category.id !== task.category.id) {
+    const newCategoryId = updateTaskDto.category as unknown
+    const oldCategoryId = task.category.id
+
+    // =============== Task moved =========== //
+    if (newCategoryId !== oldCategoryId) {
       const newCategory = await this.categoryRepository.findOne({
-        where: { id: updateTaskDto.category.id }
+        where: { id: newCategoryId as number }
       })
       if (!newCategory) {
         throw new NotFoundException('New category not found!')
@@ -91,18 +93,67 @@ export class TaskService {
         actionId: 3,
         oldCategoryName: task.category.title,
         newCategoryName: newCategory.title,
-        newTaskName: '',
         oldTaskName: task.title,
-        // categoryId: 0,
         taskId: task.id
       }
       if (!newLog) throw new BadRequestException('Something went wrong...')
-
       await this.historyRepository.save(newLog)
     }
 
-    await this.taskRepository.update(id, updateTaskDto)
+    // =============== Task rename =========== //
+    if (task.title !== updateTaskDto.title) {
+      const newLog = {
+        actionId: 7,
+        oldCategoryName: task.category.title,
+        newTaskName: updateTaskDto.title,
+        oldTaskName: task.title,
+        taskId: task.id
+      }
+      if (!newLog) throw new BadRequestException('Something went wrong...')
+      await this.historyRepository.save(newLog)
+    }
 
+    // =============== Change task status =========== //
+    if (task.priority !== updateTaskDto.priority) {
+      const newLog = {
+        actionId: 8,
+        oldTaskName: task.title,
+        oldPriority: task.priority,
+        newPriority: updateTaskDto.priority,
+        taskId: task.id
+      }
+      if (!newLog) throw new BadRequestException('Something went wrong...')
+      await this.historyRepository.save(newLog)
+    }
+
+    // =============== Change due date =========== //
+    if (task.duedate !== updateTaskDto.duedate) {
+      const newLog = {
+        actionId: 9,
+        oldTaskName: task.title,
+        oldDuedate: task.duedate,
+        newDuedate: updateTaskDto.duedate,
+        taskId: task.id
+      }
+      if (!newLog) throw new BadRequestException('Something went wrong...')
+      await this.historyRepository.save(newLog)
+    }
+
+    // =============== Change description =========== //
+    if (task.description !== updateTaskDto.description) {
+      const newLog = {
+        actionId: 10,
+        oldTaskName: task.title,
+        oldDescription: task.description,
+        newDescription: updateTaskDto.description,
+        taskId: task.id
+      }
+      if (!newLog) throw new BadRequestException('Something went wrong...')
+      await this.historyRepository.save(newLog)
+    }
+
+    const { currentCategoryName, ...rest } = updateTaskDto
+    await this.taskRepository.update(id, rest)
     return { message: `Task ${id} has been updated` }
   }
 

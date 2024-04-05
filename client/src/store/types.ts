@@ -26,6 +26,12 @@ export type HistoryType = {
     newCategoryName: string
     oldTaskName: string
     newTaskName: string
+    oldPriority: string
+    newPriority: string
+    oldDuedate: string
+    newDuedate: string
+    oldDescription: string
+    newDescription: string
     taskId: number
     createdAt: Date
 }

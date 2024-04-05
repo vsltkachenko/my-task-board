@@ -29,12 +29,7 @@ export class CategoryService {
 
     const newLog = {
       actionId: 1,
-      newCategoryName: newCategory.title,
-      oldCategoryName: '',
-      newTaskName: '',
-      oldTaskName: '',
-      categoryId: 0,
-      taskId: 0
+      newCategoryName: newCategory.title,     
     }
 
     if (!newLog) throw new BadRequestException('Something went wrong...')
@@ -47,10 +42,7 @@ export class CategoryService {
     return await this.categoryRepository.find({
       relations: {
         tasks: true
-      }
-      // order: {
-      //   createdAt: 'DESC'
-      // }
+      }     
     })
   }
 
@@ -74,11 +66,8 @@ export class CategoryService {
     const newLog = {
       actionId: 5,
       oldCategoryName: category.title,
-      newCategoryName: updateCategoryDto.title,
-      oldTaskName: '',
-      newTaskName: '',
-      categoryId: category.id,
-      taskId: 0
+      newCategoryName: updateCategoryDto.title,     
+      categoryId: category.id,     
     }
 
     if (!newLog) throw new BadRequestException('Something went wrong...')
@@ -96,12 +85,8 @@ export class CategoryService {
 
     const newLog = {
       actionId: 4,
-      oldCategoryName: category.title,
-      newCategoryName: '',
-      oldTaskName: '',
-      newTaskName: '',
-      categoryId: category.id,
-      taskId: 0
+      oldCategoryName: category.title,      
+      categoryId: category.id,     
     }
 
     if (!newLog) throw new BadRequestException('Something went wrong...')

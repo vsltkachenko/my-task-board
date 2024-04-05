@@ -18,5 +18,5 @@ export class CreateTaskDto {
   category: Category
 
   @IsString()
-  categoryName: string
+  currentCategoryName: string
 }

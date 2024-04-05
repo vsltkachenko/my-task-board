@@ -5,13 +5,19 @@ import { HiOutlineDotsVertical } from 'react-icons/hi'
 import { FC, useState } from 'react'
 import { FaRegEdit } from 'react-icons/fa'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-import { modalOpen, setCurrentTaskId, setModalType } from '../store/appReducer'
+import {
+    modalOpen,
+    setCurrentCategoryId,
+    setCurrentCategoryName,
+    setCurrentTaskId,
+    setModalType
+} from '../store/appReducer'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { useLazyGetAllCategoriesQuery } from '../store/services/categoryApi'
 import { useLazyGetAllHistoryQuery } from '../store/services/historyApi'
-import {
+import {   
     useDeleteTaskMutation,
-    useMoveTaskMutation
+    useUpdateTaskMutation,
 } from '../store/services/taskApi'
 import formatDueDate from '../utils/formatDueDate'
 import getSelectOptions from '../utils/getSelectOptions'
@@ -31,6 +37,8 @@ type Props = {
     description: string
     createdAt: Date
     updatedAt: Date
+    categoryName: string
+    categoryId: number
 }
 
 const Task: FC<Props> = ({
@@ -38,7 +46,9 @@ const Task: FC<Props> = ({
     title,
     description,
     duedate,
-    priority
+    priority,
+    categoryName,
+    categoryId
     //  createdAt,
     //  updatedAt
 }) => {
@@ -47,33 +57,36 @@ const Task: FC<Props> = ({
     const { allCategory } = useAppSelector((store) => store.app)
 
     const [deleteTask] = useDeleteTaskMutation()
-    const [moveTask] = useMoveTaskMutation()
+    const [updateTask] = useUpdateTaskMutation()
     const [triggerGetAllCategories] = useLazyGetAllCategoriesQuery()
     const [triggerGetAllHistory] = useLazyGetAllHistoryQuery()
 
     const moveTaskAction = async (category: string) => {
-        await moveTask({ id: `${id}`, category: +category })
+        await updateTask({ id: `${id}`, category: +category,currentCategoryName: categoryName  })
         await triggerGetAllCategories()
         await triggerGetAllHistory()
     }
 
-    const taskActions = async (action: string | number) => {
+    const taskActions = async (action: string) => {
         switch (action) {
             case 'open':
                 dispatch(setCurrentTaskId(id))
+                dispatch(setCurrentCategoryName(categoryName))
+                dispatch(setCurrentCategoryId(categoryId))
                 dispatch(setModalType('TaskDetails'))
                 dispatch(modalOpen())
                 break
 
             case 'edit-mode':
                 dispatch(setCurrentTaskId(id))
+                dispatch(setCurrentCategoryName(categoryName))
+                dispatch(setCurrentCategoryId(categoryId))
                 dispatch(setModalType('TaskDetailsEdit'))
                 setOpen(false)
                 dispatch(modalOpen())
                 break
 
-            case 'delete':
-                console.log('delete task')
+            case 'delete':               
                 await deleteTask(`${id}`).unwrap()
                 await triggerGetAllCategories()
                 await triggerGetAllHistory()

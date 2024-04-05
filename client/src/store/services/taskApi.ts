@@ -11,7 +11,7 @@ export const taskApi = api.injectEndpoints({
                 priority: 'Medium' | 'Low' | 'High'
                 description: string
                 category: number
-                categoryName: string
+                currentCategoryName: string
             }
         >({
             query: (taskData) => ({
@@ -24,11 +24,12 @@ export const taskApi = api.injectEndpoints({
             TaskType,
             {
                 id: string
-                title: string
-                duedate: string
-                priority: 'Medium' | 'Low' | 'High'
-                description: string
-                category: number               
+                title?: string
+                duedate?: string
+                priority?: 'Medium' | 'Low' | 'High'
+                description?: string
+                category: number
+                currentCategoryName: string
             }
         >({
             query: ({
@@ -37,20 +38,21 @@ export const taskApi = api.injectEndpoints({
                 duedate,
                 priority,
                 description,
-                category
+                category,
+                currentCategoryName
             }) => ({
                 url: `/tasks/${id}`,
                 method: 'PATCH',
-                body: { title, duedate, priority, description, category }
+                body: {
+                    title,
+                    duedate,
+                    priority,
+                    description,
+                    category,
+                    currentCategoryName
+                }
             })
-        }),
-        moveTask: builder.mutation<TaskType, { id: string; category: number }>({
-            query: ({ id, category }) => ({
-                url: `/tasks/${id}`,
-                method: 'PATCH',
-                body: { category }
-            })
-        }),
+        }),  
         getAllTasks: builder.query<TaskType[], void>({
             query: () => ({
                 url: '/tasks',
@@ -75,7 +77,6 @@ export const taskApi = api.injectEndpoints({
 export const {
     useCreateTaskMutation,
     useUpdateTaskMutation,
-    useMoveTaskMutation,
     useGetAllTasksQuery,
     useGetTaskByIdQuery,
     useDeleteTaskMutation,
@@ -90,6 +91,5 @@ export const {
         getAllTasks,
         getTaskById,
         deleteTask,
-        moveTask
     }
 } = taskApi

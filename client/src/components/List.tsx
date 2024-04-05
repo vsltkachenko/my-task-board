@@ -1,14 +1,14 @@
 import { FC } from 'react'
+import { CategoryType } from '../store/types'
 import Category from './Category'
 import Task from './Task'
-import { CategoryType } from '../store/types'
 
-const List: FC<CategoryType> = ({ id, title, tasks }) => {
+const List: FC<CategoryType> = ({ id:categoryId, title: categoryName, tasks }) => {
     //  console.log(id, title, createdAt, updatedAt, tasks)
 
     return (
         <div className="flex flex-col gap-4">
-            <Category count={tasks.length || 0} title={title} id={id} />
+            <Category count={tasks.length || 0} title={categoryName} id={categoryId} />
 
             {tasks.map(
                 ({
@@ -29,6 +29,8 @@ const List: FC<CategoryType> = ({ id, title, tasks }) => {
                         createdAt={createdAt}
                         updatedAt={updatedAt}
                         key={id}
+                        categoryName={categoryName}
+                        categoryId={categoryId}
                     />
                 )
             )}
