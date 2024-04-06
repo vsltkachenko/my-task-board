@@ -95,7 +95,7 @@ const AsideCard: FC<HistoryType> = ({
 
                 {actionId === 4 && (
                     <>
-                        <span>You deleted </span>
+                        <span>You deleted list </span>
                         <FaRegCircleDot
                             size={16}
                             className="inline-block px-[2px] pb-[3px]"
@@ -253,7 +253,7 @@ const AsideCard: FC<HistoryType> = ({
 
                 {actionId === 10 && (
                     <>
-                        <span>You have changed the description of task </span>
+                        <span>You changed the description of task </span>
                         <FaRegCircleDot
                             size={16}
                             className="inline-block px-[2px] pb-[3px]"

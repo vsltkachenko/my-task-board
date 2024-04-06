@@ -35,7 +35,7 @@ const Aside: FC<Props> = ({ active, asideClose }) => {
                     <h2 className=" p-4 pl-6 text-xl text-white">History</h2>
                 </div>
 
-                <div className="h-full overflow-y-auto px-4">
+                <div className="h-full overflow-y-auto px-4 pb-24">
                     {data.map((card, index: number) => (
                         <AsideCard key={index} {...card} />
                     ))}
