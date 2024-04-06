@@ -1,5 +1,4 @@
 import { FC, FormEvent, useEffect, useRef, useState } from 'react'
-import { BsDot } from 'react-icons/bs'
 import { CiCalendar } from 'react-icons/ci'
 import { FaRegEdit } from 'react-icons/fa'
 import { VscSymbolEvent } from 'react-icons/vsc'
@@ -12,10 +11,10 @@ import {
     useUpdateTaskMutation
 } from '../store/services/taskApi'
 import { TaskType } from '../store/types'
-import formatDate from '../utils/formatDate'
 import formatDueDate from '../utils/formatDueDate'
 import CardSelect from './CardSelect'
 import AirDatepickerReact from './Datepicker/Datepicker-react'
+import TaskActivity from './TaskActivity'
 
 type Props = {
     editMode?: boolean | undefined
@@ -63,7 +62,7 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
             description: '',
             status: ''
         })
-    }  
+    }
 
     const currentTask = allCategory.reduce<TaskType | null>((acc, category) => {
         const existThisTask = category.tasks.find(
@@ -185,7 +184,7 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
                             {currentCategoryName}
                         </span>
                     </div>
-                    <div className="flex flex-wrap items-center gap-4 text-sm ">
+                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 text-sm ">
                         <div className="flex min-w-24 shrink-0  gap-x-2  text-slate-600">
                             <CiCalendar size={18} />
                             <span className="">Due date</span>
@@ -262,23 +261,7 @@ const TaskDetails: FC<Props> = ({ editMode = false, newTask }) => {
                     )}
                 </div>
             </div>
-            {!newTask ? (
-                <div className="w-full basis-2/5 bg-gray-200 px-6 py-6  font-normal sm:py-16">
-                    <h3 className="relative mb-3 text-base font-semibold sm:mb-5">
-                        Activity
-                    </h3>
-                    <div className="mb-2 flex flex-wrap items-center justify-between gap-x-4 text-xs text-slate-600">
-                        <div className="ml-[-6px] flex items-center">
-                            <BsDot size={20} />
-                            You created this task
-                        </div>
-                        <span>
-                            {currentTask?.createdAt &&
-                                formatDate(currentTask?.createdAt)}
-                        </span>
-                    </div>
-                </div>
-            ) : null}
+            {!newTask && <TaskActivity currentTask={currentTask} />}
         </form>
     )
 }

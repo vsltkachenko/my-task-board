@@ -90,7 +90,7 @@ export class TaskService {
       }
 
       const newLog = {
-        actionId: 3,
+        actionId: 6,
         oldCategoryName: task.category.title,
         newCategoryName: newCategory.title,
         oldTaskName: task.title,
@@ -167,7 +167,7 @@ export class TaskService {
     if (!task) throw new NotFoundException('Task not found to delete!')
 
     const newLog = {
-      actionId: 6,
+      actionId: 3,
       oldCategoryName: task.category.title,
       newCategoryName: '',
       newTaskName: '',

@@ -16,16 +16,17 @@ const AsideCard: FC<HistoryType> = ({
     newPriority,
     oldDuedate,
     newDuedate,
-    oldDescription,
-    newDescription,
+    // oldDescription,
+    // newDescription,
     createdAt
 }) => {
     return (
-        <div className="px-5 text-slate-600">
+        <div className="text-slate-600">
             <div className="border-b py-2">
-                <BsDot size={24} className="inline" />
+                <BsDot size={20} className="inline" />
 
                 {/* ================= Create new list ====================== */}
+
                 {actionId === 1 && (
                     <>
                         <span>You create new list </span>
@@ -41,6 +42,7 @@ const AsideCard: FC<HistoryType> = ({
                         </div>
                     </>
                 )}
+
                 {/* =================== Add new task ======================= */}
 
                 {actionId === 2 && (
@@ -63,19 +65,19 @@ const AsideCard: FC<HistoryType> = ({
                     </>
                 )}
 
-                {/* ==================== Move task =========================== */}
+                {/* ====================== Delete task ============================ */}
 
                 {actionId === 3 && (
                     <>
-                        <span>You moved </span>
+                        <span>You deleted </span>
                         <FaRegCircleDot
                             size={16}
-                            className="inline-block px-[2px] pb-[3px]"
+                            className="inline-block pb-[4px] pl-[3px]"
                         />
-                        <span className="px-[2px] font-semibold">
+                        <span className="px-[3px] font-semibold">
                             {oldTaskName}
                         </span>
-                        <span> from </span>
+                        <span>from </span>
                         <FaRegCircleDot
                             size={16}
                             className="inline-block px-[2px] pb-[3px]"
@@ -83,11 +85,6 @@ const AsideCard: FC<HistoryType> = ({
                         <span className="font-semibold leading-6">
                             {oldCategoryName}
                         </span>
-                        <span> to the </span>
-                        <span className="font-semibold leading-6">
-                            {newCategoryName}
-                        </span>
-
                         <div className="mt-1 italic">
                             {formatDate(createdAt)}
                         </div>
@@ -138,19 +135,19 @@ const AsideCard: FC<HistoryType> = ({
                     </>
                 )}
 
-                {/* ====================== Delete task ============================ */}
+                {/* ==================== Move task =========================== */}
 
                 {actionId === 6 && (
                     <>
-                        <span>You deleted </span>
+                        <span>You moved </span>
                         <FaRegCircleDot
                             size={16}
-                            className="inline-block pb-[4px] pl-[3px]"
+                            className="inline-block px-[2px] pb-[3px]"
                         />
-                        <span className="px-[3px] font-semibold">
+                        <span className="px-[2px] font-semibold">
                             {oldTaskName}
                         </span>
-                        <span>from </span>
+                        <span> from </span>
                         <FaRegCircleDot
                             size={16}
                             className="inline-block px-[2px] pb-[3px]"
@@ -158,6 +155,11 @@ const AsideCard: FC<HistoryType> = ({
                         <span className="font-semibold leading-6">
                             {oldCategoryName}
                         </span>
+                        <span> to the </span>
+                        <span className="font-semibold leading-6">
+                            {newCategoryName}
+                        </span>
+
                         <div className="mt-1 italic">
                             {formatDate(createdAt)}
                         </div>
@@ -192,6 +194,7 @@ const AsideCard: FC<HistoryType> = ({
                         </div>
                     </>
                 )}
+
                 {/* ======================= Change status ============================ */}
 
                 {actionId === 8 && (
@@ -218,6 +221,7 @@ const AsideCard: FC<HistoryType> = ({
                         </div>
                     </>
                 )}
+
                 {/* ====================== Change due date ============================= */}
 
                 {actionId === 9 && (
@@ -244,6 +248,7 @@ const AsideCard: FC<HistoryType> = ({
                         </div>
                     </>
                 )}
+
                 {/* ================== Change description =========================== */}
 
                 {actionId === 10 && (

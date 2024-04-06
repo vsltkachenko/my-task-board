@@ -1,6 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
-import { CreateHistoryDto } from './dto/create-history.dto'
-import { UpdateHistoryDto } from './dto/update-history.dto'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { History } from './entities/history.entity'
@@ -15,12 +13,12 @@ export class HistoryService {
   async findAll() {
     const logs = await this.historyRepository.find({
       order: {
-        createdAt: 'DESC'
+        createdAt: 'ASC'
       }
     })
     return logs
   }
-  
+
   async removeAll() {
     await this.historyRepository.delete({})
     return 'All history records have been removed'

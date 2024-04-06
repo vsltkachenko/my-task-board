@@ -24,10 +24,10 @@ export const taskApi = api.injectEndpoints({
             TaskType,
             {
                 id: string
-                title?: string
-                duedate?: string
-                priority?: 'Medium' | 'Low' | 'High'
-                description?: string
+                title: string
+                duedate: string
+                priority: 'Medium' | 'Low' | 'High'
+                description: string
                 category: number
                 currentCategoryName: string
             }
@@ -52,7 +52,7 @@ export const taskApi = api.injectEndpoints({
                     currentCategoryName
                 }
             })
-        }),  
+        }),
         getAllTasks: builder.query<TaskType[], void>({
             query: () => ({
                 url: '/tasks',
@@ -85,11 +85,5 @@ export const {
 } = taskApi
 
 export const {
-    endpoints: {
-        createTask,
-        updateTask,
-        getAllTasks,
-        getTaskById,
-        deleteTask,
-    }
+    endpoints: { createTask, updateTask, getAllTasks, getTaskById, deleteTask }
 } = taskApi

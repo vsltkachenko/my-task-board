@@ -15,9 +15,9 @@ import {
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { useLazyGetAllCategoriesQuery } from '../store/services/categoryApi'
 import { useLazyGetAllHistoryQuery } from '../store/services/historyApi'
-import {   
+import {
     useDeleteTaskMutation,
-    useUpdateTaskMutation,
+    useUpdateTaskMutation
 } from '../store/services/taskApi'
 import formatDueDate from '../utils/formatDueDate'
 import getSelectOptions from '../utils/getSelectOptions'
@@ -62,7 +62,15 @@ const Task: FC<Props> = ({
     const [triggerGetAllHistory] = useLazyGetAllHistoryQuery()
 
     const moveTaskAction = async (category: string) => {
-        await updateTask({ id: `${id}`, category: +category,currentCategoryName: categoryName  })
+        await updateTask({
+            id: `${id}`,
+            category: +category,
+            currentCategoryName: categoryName,
+            title,
+            duedate,
+            priority,
+            description
+        })
         await triggerGetAllCategories()
         await triggerGetAllHistory()
     }
@@ -86,7 +94,7 @@ const Task: FC<Props> = ({
                 dispatch(modalOpen())
                 break
 
-            case 'delete':               
+            case 'delete':
                 await deleteTask(`${id}`).unwrap()
                 await triggerGetAllCategories()
                 await triggerGetAllHistory()
